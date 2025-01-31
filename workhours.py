@@ -12,52 +12,6 @@ st.set_page_config(
     initial_sidebar_state='expanded'
 )
 
-st.markdown(
-    """
-    <style>
-    /* Barva pozadí celé stránky */
-    .main, .block-container {
-        background-color: #0E1117;
-        color: #FFFFFF;
-    }
-
-    /* Sidebar */
-    [data-testid="stSidebar"] {
-        background-color: #252730;
-    }
-    [data-testid="stSidebar"] * {
-        color: #FFFFFF;
-    }
-
-    /* Hlavní nadpis */
-    h1, h2, h3, h4, h5, h6 {
-        color: #FF4B4B;
-    }
-
-    /* Ostatní texty, popisky, widgety */
-    .st-bv, .st-d5, .stCheckbox, .st-ax, .stButton button {
-        color: #FFFFFF;
-        background-color: #0E1117;
-    }
-
-    /* Rámečky inputů apod. */
-    .css-1ciktl7, .css-2trqyj, .st-af, .stTextInput {
-        background-color: #0E1117;
-        border: 1px solid #666666;
-        color: #FFFFFF;
-    }
-
-    /* Tlačítka */
-    .stButton button {
-        background-color: #FF4B4B;
-        border: none;
-        color: #FFFFFF;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
 # ------------------------------
 # ----------- NÁVOD ------------
 
