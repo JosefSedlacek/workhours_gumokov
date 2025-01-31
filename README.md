@@ -3,6 +3,8 @@ Tato aplikace slouží k úpravě csv souboru Workhours, kde máme pro jednotliv
 nastavené dostupné strojní hodiny a lidské hodiny. Může se zde zaznamenat například 
 odstávka výroby, změna ze 3 směnného provozu na dvousměnný a tak dále.
 
+Aplikace je dostupná na tomto [odkaze](https://workhours.streamlit.app/)
+
 ## Nahrávání souborů
 
 Nahrajte soubory Workhours (CSV) a Skupiny (Excel). Tyto soubory najdete na:  
