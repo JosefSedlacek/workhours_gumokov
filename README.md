@@ -15,8 +15,6 @@ Skupiny do pole pro nahrávání Workhours a opačně. Po nahrání se tyto
 tabulky propojí a mělo by se ukázat "Propojení bylo úspěšné". Poté můžete
 pokračovat na list "Úprava dat".
 
----
-
 ## Úprava dat
 
 #### 1. Výběr pracoviště
@@ -34,8 +32,6 @@ Zde napište číslo jak pro lidské, tak pro strojní hodiny. Ve všech řádc�
 odpovídají vašim zadaným filtrům, se změní hodnoty ve sloupcích Lidské hodiny a 
 Strojní hodiny na vámi zadané hodnoty. Nakonec klikněte na `Aktualizovat data` aby
 se změna propsala.
-
----
 
 ## Kontrola a stažení nových dat
 
@@ -55,6 +51,12 @@ a nahraďte původní soubor tímto novým souborem.
 
 POZOR: na této adrese `P:\All Access\TB HRA KPIs\podklady\Kapacity` se soubor
 musí jmenovat Workhours.csv. Pokud se bude jmenovat jinak, nenačte se do PowerBI.
+
+
+---
+
+(english)  
+
 ## Uploading files
 
 Upload the Workhours (CSV) and Groups (Excel) files. These files can be found at:
@@ -63,8 +65,6 @@ Be careful to upload the file to the correct location - you must not upload
 Groups to the Workhours upload field and vice versa. After uploading, these
 tables will be connected and "Connection was successful" should appear. You can then
 continue to the "Data editing" sheet.
-
----
 
 ## Data editing
 
@@ -82,8 +82,6 @@ Here, type the number for both human and machine hours. In all rows that
 match your specified filters, the values ​​in the Human Hours and
 Machine Hours columns will change to the values ​​you specified. Finally, click `Update Data` to
 apply the change.
-
----
 
 ## Check and download new data
 
