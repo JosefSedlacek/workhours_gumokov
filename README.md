@@ -1,5 +1,7 @@
 # Workhours
-
+Tato aplikace slouží k úpravě csv souboru Workhours, kde máme pro jednotlivé pracoviště 
+nastavené dostupné strojní hodiny a lidské hodiny. Může se zde zaznamenat například 
+odstávka výroby, změna ze 3 směnného provozu na dvousměnný a tak dále.
 
 ## Nahrávání souborů
 
