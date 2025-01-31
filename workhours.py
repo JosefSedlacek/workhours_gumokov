@@ -169,11 +169,11 @@ def edit_data():
                 mask = pd.Series([True] * len(df))  # výchozí maska (všude True)
 
                 # Filtrování podle typu
-                if filter_type == "a) Konkrétní pracoviště (název)" and selected_names:
+                if filter_type == "Pracoviště (název)" and selected_names:
                     mask = mask & (df['název'].isin(selected_names))
-                elif filter_type == "b) Skupina pracovišť (podproces)" and selected_subprocesses:
+                elif filter_type == "Skupina pracovišť (podproces)" and selected_subprocesses:
                     mask = mask & (df['podproces'].isin(selected_subprocesses))
-                elif filter_type == "c) Celý proces" and selected_processes:
+                elif filter_type == "Celý proces" and selected_processes:
                     mask = mask & (df['proces'].isin(selected_processes))
 
                 # Filtr pro rok
@@ -201,7 +201,10 @@ def edit_data():
                     st.success('Data byla aktualizována.')
                 else:
                     st.error('Žádné záznamy neodpovídají zadaným filtrům.')
-
+                    
+        # ---------------------------
+        # ------- ZOBRAZOVÁNÍ -------
+        
         # Zobrazení výsledného grafu
         st.markdown("---")
         st.subheader("Graf nabídky pro kontrolu")
