@@ -2,13 +2,16 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
+merged_table_directory = "C:\\MY PROJECTS\\merged_table.csv"
+filtered_table_directory = "C:\\MY PROJECTS\\filtered_table.csv"
+
 st.set_page_config(
-    page_title="Příklad v dark módu",
-    layout="centered",
-    page_icon="🌙"
+    page_title='Pracovní kalendář',
+    page_icon=':calendar:',
+    layout='centered',
+    initial_sidebar_state='expanded'
 )
 
-# Vlastní CSS přes markdown
 st.markdown(
     """
     <style>
@@ -53,13 +56,6 @@ st.markdown(
     </style>
     """,
     unsafe_allow_html=True
-)
-
-st.set_page_config(
-    page_title='Pracovní kalendář',
-    page_icon=':calendar:',
-    layout='centered',
-    initial_sidebar_state='expanded'
 )
 
 # ------------------------------
