@@ -9,8 +9,8 @@ st.set_page_config(
     initial_sidebar_state='expanded'
 )
 
-# ------------------------------
-# ----------- NÁVOD ------------
+# -----------------------------------------------------------------------------
+# NÁVOD -----------------------------------------------------------------------
 
 def show_instructions():
     st.title("Návod - Jak používat tuto aplikaci")
@@ -61,8 +61,8 @@ def show_instructions():
     musí jmenovat Workhours.csv. Pokud se bude jmenovat jinak, nenačte se do PowerBI.
     """)
 
-# ------------------------------
-# ----- NAHRÁVÁNÍ SOUBORŮ ------
+# -----------------------------------------------------------------------------
+# NAHRÁVÁNÍ SOUBORŮ -----------------------------------------------------------
 
 def upload_files():
     st.title("Nahrávání souborů")
