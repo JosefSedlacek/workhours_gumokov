@@ -32,7 +32,12 @@ def show_instructions():
     1. **Úprava strojních hodin**
     2. **Úprava lidských hodin**
 
-    Logika filtrování je stejná pro obě sekce, liší se jen v tom, zda se mění sloupec pro strojní nebo lidské hodiny.
+    Logika filtrování je stejná pro obě sekce, liší se jen v tom, zda se mění 
+    sloupec pro strojní nebo lidské hodiny.
+    
+    Při upravování nabídky hodin si nejdříve vyberu, jestli upravuji strojní nebo
+    lidské hodiny. Následně vyberu, pro která pracoviště upravuji. Můžu vybrat 
+    i celý výrobní proces nebo skupinu pracovišť.
 
     ---
     
@@ -61,26 +66,31 @@ def show_instructions():
 
 def upload_files():
     st.title("Nahrávání souborů")
-
+    
+    # Pokud jsou data už nahraná
     if 'df' in st.session_state:
         st.subheader("Máte načtená data: Workhours a Skupiny")
         st.dataframe(st.session_state['df'].head(10))
         st.info("Data jsou již nahraná, pokračujte v kartě Úprava strojních nebo lidských hodin.")
+    # Nahrávání dat
     else:
+        # Nahrání csv Workhours
         uploaded_csv = st.file_uploader("Nahraj soubor Workhours (csv)", type=["csv"])
         df_csv = None
         if uploaded_csv is not None:
             df_csv = pd.read_csv(uploaded_csv, sep=';', decimal=',')
             st.subheader("Obsah souboru Workhours")
             st.dataframe(df_csv.head(4))
-
+        
+        # Nahrání excelu Skupiny
         uploaded_xlsx = st.file_uploader("Nahraj soubor Skupiny (xlsx)", type=["xlsx"])
         df_xlsx = None
         if uploaded_xlsx is not None:
             df_xlsx = pd.read_excel(uploaded_xlsx)
             st.subheader("Obsah souboru Skupiny")
             st.dataframe(df_xlsx.head(4))
-
+        
+        # Spojení csv a excelu
         if df_csv is not None and df_xlsx is not None:
             st.subheader("Propojení dat Workhours a Skupiny")
             relevant_columns = ["pracoviště", "proces", "podproces", "název"]
@@ -92,18 +102,18 @@ def upload_files():
             # SESSION_STATE
             st.session_state['df'] = df
 
-# ------------------------------
-# -- ÚPRAVA STROJNÍCH HODIN ---
+# -----------------------------------------------------------------------------
+# ÚPRAVA STROJNÍCH HODIN ------------------------------------------------------
 
 def edit_data_stroje():
     st.title("Úprava strojních hodin")
     if 'df' in st.session_state:
 
-        # Načtení dataframe
+        # SESSION_STATE Načtení dataframe !!!
         df = st.session_state['df']
 
         # Výběr typu filtrování
-        st.subheader("Výběr typu filtrování:")
+        st.subheader("Výběr pracoviště:")
         filter_type = st.radio(
             "Zvolte, zda chcete pracovat s konkrétním pracovištěm, skupinou, nebo procesem:",
             ("Pracoviště (název)", "Skupina pracovišť (podproces)", "Celý proces")
@@ -115,22 +125,29 @@ def edit_data_stroje():
 
         # Výběr podle zvoleného typu
         if filter_type == "Pracoviště (název)":
-            selected_names = st.multiselect('Vyber jedno nebo více pracovišť (názvy pracovišť):', df['název'].dropna().unique())
+            selected_names = st.multiselect('Vyber jedno nebo více pracovišť (názvy pracovišť):', 
+                                            df['název'].dropna().unique())
         elif filter_type == "Skupina pracovišť (podproces)":
-            selected_subprocesses = st.multiselect('Vyber jednu nebo více skupin (podprocesy):', df['podproces'].dropna().unique())
+            selected_subprocesses = st.multiselect('Vyber jednu nebo více skupin (podprocesy):', 
+                                                   df['podproces'].dropna().unique())
         else:  # c) Celý proces
-            selected_processes = st.multiselect('Vyber jeden nebo více výrobních procesů:', df['proces'].dropna().unique())
+            selected_processes = st.multiselect('Vyber jeden nebo více výrobních procesů:', 
+                                                df['proces'].dropna().unique())
 
-        st.markdown("---")
+        st.markdown("""
+                    ---
+                    ## Strojní hodiny
+                    """)
 
         col1, col2 = st.columns([1, 1], gap="large")
 
         # Vytvoření widgetů pro výběr roků, měsíc/týden, dny/svátky
         with col1:
             st.subheader("Výběr dnů:")
+            # Vybrat rok
             rok = st.multiselect('Vyber rok:', options=df['Rok'].unique())
 
-            # zvolit měsíc nebo týden
+            # Zvolit měsíc nebo týden
             time_selection = st.radio("Vyberte, zda chcete filtrovat podle týdne nebo měsíce:", ("Vybrat týden", "Vybrat měsíc"))
             if time_selection == "Vybrat týden":
                 tyden = st.multiselect('Vyber týden:', options=df['Týden'].dropna().unique())
@@ -138,16 +155,18 @@ def edit_data_stroje():
                 mesic = st.multiselect('Vyber měsíc:', options=df['Měsíc'].dropna().unique())
 
             st.markdown("---")
-
+            
+            # Zvolit svátky - pracovní den - víkend
             svatky = st.multiselect('Svátky, víkend, pracovní den:', options=df['Svátky'].dropna().unique(), default=None)
-
+            
+            # Zvolit dny v týdnu (ve správném pořadí)
             dni_v_tydnu = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne']
             available_days = [day for day in dni_v_tydnu if day in df['Den'].unique()]
             den = st.multiselect('Vyber den:', options=available_days)
 
         # Vstupní pole pro zadání nové hodnoty strojních hodin
         with col2:
-            st.subheader("Nová hodnota pro STROJNÍ hodiny:")
+            st.subheader("Nová hodnota:")
             nabidka_stroje = st.number_input('STROJNÍ HODINY', min_value=0.0, format="%.2f", key='nabidka_stroje_input')
 
             # Tlačítko pro aktualizaci dat
@@ -187,15 +206,15 @@ def edit_data_stroje():
                 else:
                     st.error('Žádné záznamy neodpovídají zadaným filtrům.')
                     
-        # ---------------------------
-        # ------- ZOBRAZOVÁNÍ -------
+        # ---------------------------------------------------------------------
+        # ZOBRAZOVÁNÍ STROJNÍCH HODIN -----------------------------------------
         
         # Zobrazení výsledného grafu
         st.markdown("---")
         st.subheader("Graf nabídky pro kontrolu")
         selected_nazev = st.selectbox('Vyber pracoviště pro graf:', options=df['název'].dropna().unique())
         selected_year = st.selectbox('Vyber rok:', options=df['Rok'].dropna().unique())
-        graph_option = st.radio("Zvol typ dat pro graf:", ("Nabídka (lidi) [h]", "Nabídka (stroje) [h]"))
+        graph_option = st.radio("Zvol typ dat pro graf:", ("Nabídka (stroje) [h]", "Nabídka (lidi) [h]"))
 
         # Filtrování dat pro graf
         filtered_df = df[(df['název'] == selected_nazev) & (df['Rok'] == selected_year)].copy()
@@ -204,10 +223,9 @@ def edit_data_stroje():
         filtered_df.dropna(subset=['Datum'], inplace=True)
 
         # Skupina po týdnech
-        # Pokud máte ve sloupci Týden číslo týdne, můžeme agregovat přímo přes něj.
         weekly_grouped = filtered_df.groupby('Týden').agg({graph_option: 'sum'}).reset_index()
 
-        fig, ax = plt.subplots(figsize=(10, 4))
+        fig, ax = plt.subplots(figsize=(16, 5))
         ax.bar(weekly_grouped['Týden'], weekly_grouped[graph_option], width=0.6, color='skyblue')
         ax.set_title(f'{graph_option} pro {selected_nazev} (týdny, rok {selected_year})', color='white')
         ax.set_xlabel('Týden', color='white')
@@ -248,8 +266,8 @@ def edit_data_stroje():
     else:
         st.warning("Nejprve nahrajte soubory v sekci 'Nahrávání souborů'.")
 
-# ------------------------------
-# -- ÚPRAVA LIDSKÝCH HODIN ----
+# -----------------------------------------------------------------------------
+# ÚPRAVA LIDSKÝCH HODIN -------------------------------------------------------
 
 def edit_data_lidi():
     st.title("Úprava lidských hodin")
@@ -259,7 +277,7 @@ def edit_data_lidi():
         df = st.session_state['df']
 
         # Výběr typu filtrování
-        st.subheader("Výběr typu filtrování:")
+        st.subheader("Výběr pracoviště:")
         filter_type = st.radio(
             "Zvolte, zda chcete pracovat s konkrétním pracovištěm, skupinou, nebo procesem:",
             ("Pracoviště (název)", "Skupina pracovišť (podproces)", "Celý proces")
@@ -277,7 +295,10 @@ def edit_data_lidi():
         else:  # c) Celý proces
             selected_processes = st.multiselect('Vyber jeden nebo více výrobních procesů:', df['proces'].dropna().unique())
 
-        st.markdown("---")
+        st.markdown("""
+                    ---
+                    ## Lidské hodiny
+                    """)
 
         col1, col2 = st.columns([1, 1], gap="large")
 
@@ -303,7 +324,7 @@ def edit_data_lidi():
 
         # Vstupní pole pro zadání nové hodnoty lidských hodin
         with col2:
-            st.subheader("Nová hodnota pro LIDSKÉ hodiny:")
+            st.subheader("Nová hodnota:")
             nabidka_lidi = st.number_input('LIDSKÉ HODINY', min_value=0.0, format="%.2f", key='nabidka_lidi_input')
 
             # Tlačítko pro aktualizaci dat
@@ -343,8 +364,8 @@ def edit_data_lidi():
                 else:
                     st.error('Žádné záznamy neodpovídají zadaným filtrům.')
                     
-        # ---------------------------
-        # ------- ZOBRAZOVÁNÍ -------
+        # ---------------------------------------------------------------------
+        # ZOBRAZOVÁNÍ LIDSKÝCH HODIN ------------------------------------------
         
         # Zobrazení výsledného grafu
         st.markdown("---")
@@ -403,8 +424,9 @@ def edit_data_lidi():
     else:
         st.warning("Nejprve nahrajte soubory v sekci 'Nahrávání souborů'.")
 
-# ------------------------------
-# ----------- MAIN -------------
+# -----------------------------------------------------------------------------
+# MAIN ------------------------------------------------------------------------
+
 def main():
     st.sidebar.title("Menu:")
     menu = st.sidebar.radio("Vyberte sekci", ["Návod", "Nahrávání souborů", "Úprava strojních hodin", "Úprava lidských hodin"])
